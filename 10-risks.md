@@ -1,7 +1,14 @@
 # Risks
 
-<!-- TODO(johny): risk table with owners. Include AI-native risks: prompt injection, model drift, vet alert fatigue -->
-
 | ID | Risk | Likelihood | Impact | Mitigation | Owner | ADR |
 |---|---|---|---|---|---|---|
-| R1 | TODO | | | | | |
+| R1 | AI provider raises prices or shuts down | Medium | Medium | Capability-based gateway with named secondary provider, shadow-tested; deterministic fallback always exists | AI platform owner | [ADR-004](adrs/ADR-004-ai-gateway-provider-indirection.md) |
+| R2 | Model drift goes unnoticed in production | Medium | High | Every inference is a traced event; delayed ground-truth join; automatic rollback on fitness-gate breach | AI platform owner | [ADR-010](adrs/ADR-010-every-inference-is-an-event.md) |
+| R3 | Prompt injection via guest companion (e.g. a visitor tries to extract system prompts or manipulate offers) | Medium | Medium | Grounded generation, guardrail chain, safety-relevant facts inserted verbatim never generated, 100% safety-refusal gate | AI platform owner | [ADR-011](adrs/ADR-011-latency-budget-visitor-ai.md), [ADR-004](adrs/ADR-004-ai-gateway-provider-indirection.md) |
+| R4 | Vet/keeper alert fatigue from false-positive welfare alerts | Medium | High (erodes trust in the whole capability) | Confidence bands priced by real cost-of-error, not arbitrary thresholds; weekly false-negative audit keeps the threshold honest in both directions | C1 owner | [ADR-006](adrs/ADR-006-confidence-bands-cost-of-error.md) |
+| R5 | Individual-animal attribution fails in densely shared enclosures | Medium | Medium | PIT/RFID tagging + enclosure-scoped attribution, explicitly designed rather than assumed away | C1 owner | [ADR-008](adrs/ADR-008-individual-animal-identity.md) |
+| R6 | Baseline P&L assumptions (ticket price, operating days) turn out to be wrong | High | High | Every load-bearing number flagged in an assumptions table with an "if wrong" column; architecture doesn't depend on the exact figures, only their order of magnitude | Business case owner | [01-business-case.md](01-business-case.md) |
+| R7 | Connectivity outage lasts longer than the 72h local buffer | Low | High | Degraded ladder keeps safety/ticketing/cashless fully functional with zero cloud; only AI capabilities degrade to cached/stale, and visibly so | Ops lead | [03-edge-and-connectivity.md](03-edge-and-connectivity.md) |
+| R8 | Small on-call team burns out covering AI-specific incidents | Medium | Medium | Only the deterministic core pages immediately; AI-capability degradation is next-business-day by design, since every capability already has a working fallback | Ops lead | [07-operations.md](07-operations.md) |
+| R9 | A "successful" capability's payback erodes over time (model gets worse, costs creep) | Medium | Medium | Funding gate is not one-time — kill criteria are re-checked continuously against production data, not just at launch | Business case owner | [ADR-005](adrs/ADR-005-ai-funding-gate.md) |
+| R10 | C4's speculative payback never materializes | Medium | Low (contained by design) | Ships last, in Phase 3, funded by Phase 2's proven returns rather than upfront — smallest blast radius if it doesn't pay off | Business case owner | [09-roadmap.md](09-roadmap.md) |
