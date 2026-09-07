@@ -6,23 +6,23 @@
 
 ## Context
 
-<!-- TODO(johny) -->
+<!-- What forced this decision? What constraint or requirement made the status quo untenable? -->
 
 ## Decision
 
-<!-- TODO(johny) -->
+<!-- What did we decide, stated as a single clear sentence, then elaborated. -->
 
 ## Alternatives considered
 
 | Option | Why not |
 |---|---|
-| TODO | |
+| [alternative 1] | [reason it was rejected] |
 | **[chosen option]** | — chosen |
 
 ## Consequences
 
-<!-- TODO(johny) -->
+<!-- What does this cost us, and what do we get in return? Be honest about the downside. -->
 
 ## How we will know this was right
 
-<!-- TODO(johny): measurable signals + the condition that would trigger a revisit -->
+<!-- Measurable signals to track, and the condition that would trigger a revisit of this decision. -->
