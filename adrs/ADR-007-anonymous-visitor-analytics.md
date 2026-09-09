@@ -22,10 +22,11 @@ visits. On-site spend offers (C3) are cohort/context-based (time of day, locatio
 identity-based, except for visitors who explicitly opt in to a loyalty tier for personalized
 history-based offers. That same opt-in loyalty record is the **only** identity-bearing data any
 capability may read — C4's return-visit personalization ([ADR-014](ADR-014-no-agent-platform-at-launch.md))
-looks it up the same way C3 does, as a typed, least-privilege lookup scoped to the current
-conversation, gated on the visitor's opt-in status being checked **at call time**, not assumed
-from the fact that an opt-in record merely exists. A visitor who opts out after opting in stops
-being personalized on their very next interaction, not on the next data-export cycle.
+looks it up the same way C3 does, as a typed, least-privilege lookup re-checked **on every
+individual tool call**, never cached for the duration of a conversation, gated on the visitor's
+opt-in status at that exact moment, not assumed from the fact that an opt-in record merely
+exists. A visitor who opts out mid-conversation stops being personalized on the companion's very
+next reply in that same conversation, not the next one.
 
 ## Alternatives considered
 

@@ -27,8 +27,9 @@ contract every other AI call uses ([ADR-004](ADR-004-ai-gateway-provider-indirec
 as a standalone agent runtime with its own registry, orchestrator, or shared memory store. Tool
 access is scoped per-request (retrieval lookup, live queue/balance read, opt-in loyalty-record
 read), least-privilege, and stateless between turns beyond the conversation itself — the
-loyalty-record tool specifically re-checks opt-in status on every call rather than caching it for
-the session, so an opt-out takes effect on the next turn, not the next deployment.
+loyalty-record tool specifically re-checks opt-in status on **every individual tool call**,
+never cached for the conversation, so an opt-out takes effect on the companion's very next reply
+in that same conversation, not the next deployment.
 
 We are explicitly not building: a cross-capability tool registry, a long-term/working memory
 tier shared across capabilities, multi-step autonomous task planning, or an agent-population

@@ -29,9 +29,11 @@ language, and accessibility as architectural requirements**, not follow-on polis
   no memory of its own across turns beyond the current conversation or across visits
   ([ADR-014](../adrs/ADR-014-no-agent-platform-at-launch.md)). Return-visit personalization comes
   from looking up the visitor's **opt-in loyalty record** ([ADR-007](../adrs/ADR-007-anonymous-visitor-analytics.md))
-  at conversation start, not from the companion recalling anything itself — the "return-visit
-  uplift" this capability is funded against ([08-cost-and-payback.md](../08-cost-and-payback.md))
-  is a data-lookup effect, not a memory-architecture one.
+  via the same typed tool call the companion uses for any other live data — re-checked every time
+  that tool is called, never cached for the conversation — not from the companion recalling
+  anything itself. The "return-visit uplift" this capability is funded against
+  ([08-cost-and-payback.md](../08-cost-and-payback.md)) is a data-lookup effect, not a
+  memory-architecture one.
 
 ## Accessibility as a functional requirement, not polish
 
