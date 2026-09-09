@@ -34,8 +34,20 @@ Sized for the team that actually exists here (3-5 engineers), not a platform org
 - **The deterministic core (gate entry, safety interlocks) pages immediately**; AI-capability
   degradation (a model falling back to its deterministic path) is a next-business-day ticket, not
   a page, because every capability already has a working fallback by design.
-- **Quarterly game day**: deliberately kill the AI Gateway's primary provider and confirm every
-  capability degrades to its stated fallback cleanly, not just in theory.
+- **Quarterly game day**, rotating through four drills so every major failure mode this
+  architecture claims to handle actually gets exercised at least once a year, not just designed
+  for on paper:
+
+  | Quarter | Drill | Risk exercised |
+  |---|---|---|
+  | Q1 | Kill the AI Gateway's primary provider; confirm every capability degrades to its stated fallback cleanly | R1 |
+  | Q2 | Sever the estate's uplink and hold it past 24h (short of the 72h buffer ceiling); confirm local consumers (siren, gate, cashless) never notice | R7 |
+  | Q3 | Force the outbox relay to redeliver a batch of already-processed events; confirm every consumer's duplicate-processing counter moves and no real-world effect double-fires | R13 |
+  | Q4 | Feed one enclosure's climate sensor an implausible reading (frozen or drifted value) while its RGB/behavior signal stays normal; confirm cross-confirmation stops the welfare alert from firing on the single bad sensor alone | R11, R12 |
+
+  A drill that has never actually been run is a design claim, not a verified property —
+  [ADR-005](adrs/ADR-005-ai-funding-gate.md)'s "a funding gate that never kills anything is
+  decoration" applies here too.
 
 ## Disaster recovery
 

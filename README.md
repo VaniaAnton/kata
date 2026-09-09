@@ -83,7 +83,7 @@ Used consistently across every diagram in this repo:
 |---|---|---|
 | 1 | Innovative use of AI | [04-ai-capabilities/C3-onsite-spend.md](04-ai-capabilities/C3-onsite-spend.md) (the lever both competitors missed), [ADR-006](adrs/ADR-006-confidence-bands-cost-of-error.md) (cost-priced confidence bands) |
 | 2 | Suitability given the constraints | [ADR-001](adrs/ADR-001-modular-monolith.md) (small-team sizing), [01-business-case.md](01-business-case.md) (P&L-first framing) |
-| 3 | Appropriate levels of detail | [06-verification.md](06-verification.md) and [08-cost-and-payback.md](08-cost-and-payback.md) — concrete numbers, not vague claims |
+| 3 | Appropriate levels of detail | [06-verification.md](06-verification.md) and [08-cost-and-payback.md](08-cost-and-payback.md) — concrete numbers, not vague claims; [02-architecture.md](02-architecture.md)'s ATAM-style worksheet for how the style choice itself was scored, not asserted |
 | 4 | Dealing with uncertainty in AI tech | [05-ai-platform.md](05-ai-platform.md), [ADR-004](adrs/ADR-004-ai-gateway-provider-indirection.md), [ADR-005](adrs/ADR-005-ai-funding-gate.md) |
 | 5 | AI architectural characteristics match the existing architecture | [02-architecture.md](02-architecture.md) "Why not microservices," [ADR-003](adrs/ADR-003-deterministic-core.md) |
 | 6 | Validation & verification of AI results | [06-verification.md](06-verification.md), [ADR-010](adrs/ADR-010-every-inference-is-an-event.md) |

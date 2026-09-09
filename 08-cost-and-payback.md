@@ -34,6 +34,26 @@ At the illustrative €32M/yr baseline revenue from
 ~€35k/yr build amortization across capabilities) stays well under 1% of revenue — the ceiling we
 use as a sanity check, not a hard target.
 
+## Cost per inference (illustrative)
+
+A monthly line item ("€1,800 → €4,500") hides whether any single capability is quietly expensive
+per use. Splitting that AI Gateway line by capability and rough volume:
+
+| Capability | Illustrative cost per unit | Basis |
+|---|---|---|
+| C1 Welfare | ~€0.004 per anomaly-scoring event | Edge-first — most scoring runs on-site for free; only escalations reach the paid gateway tier |
+| C2 Forecast | ~€1.50 per daily forecast run | Batch job, not called per visitor interaction |
+| C3 Offers | ~€0.006 per contextual-offer decision | High volume, cheap classical (non-generative) model |
+| C4 Companion | ~€0.09 per conversation | Highest per-unit cost of the five — LLM inference, tiered routing cheap-first |
+| C5 Maintenance | ~€0.003 per anomaly-scoring reading | Edge-first, same pattern as C1 |
+
+These are a back-of-envelope split of the AI Gateway line by relative capability volume and model
+tier, not measured yet — flagged illustrative like every other figure in this file. The real
+version is a one-line query away once there's production data: every inference already carries a
+`cost` field by architectural rule ([ADR-010](adrs/ADR-010-every-inference-is-an-event.md)), so
+this table becomes a query against that event stream on day one of Phase 2, not a new
+instrumentation project.
+
 ## Payback per capability
 
 | Capability | Cost (build + Yr1 run) | Effect (Yr1, illustrative) | Payback | Kill criterion |

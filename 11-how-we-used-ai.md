@@ -30,6 +30,39 @@ assistance actually went into this document, so here's the plain account.
   earlier scaffolding pass — a reminder that AI-generated structure without AI-generated (and
   human-reviewed) substance is not a finished document, just a table of contents.
 
+## Round two: adversarial self-review
+
+A day after the first draft, we ran the same submission back through AI — this time in a
+reviewer role, not an author role: read every file, adopt the perspective of the three named
+judges' actual professional focus areas (quality/AI-V&V, AI agent platforms/production ML,
+DDD/EDA/ADR rigor), and find what each would push back on. This is a different task from
+drafting and it caught a different class of problem.
+
+What it found, specifically:
+
+- **Claims not backed by the file they pointed to.** [ADR-012](adrs/ADR-012-multilingual-accessible-companion.md)
+  stated that accessibility was "checked in the same CI gate as the rest of C4's fitness
+  functions in 06-verification.md" — but that table had no such row. [10-risks.md](10-risks.md)'s
+  R4 and R5 both named a specific live-production check ("weekly false-negative audit,"
+  "individual attribution... explicitly designed") that [06-verification.md](06-verification.md)
+  didn't actually measure anywhere. Same failure shape both times: a promise made in one document,
+  never made concrete in the document it pointed to.
+- **A real trade-off recorded as a throwaway line instead of a decision.** The choice not to
+  build a multi-step agent platform for C4 lived as one bullet under "Not building" in
+  [01-business-case.md](01-business-case.md) — true, but not argued, and the single point most
+  likely to draw a direct challenge from a judge whose own book is about production agent
+  platforms. It's now [ADR-014](adrs/ADR-014-no-agent-platform-at-launch.md), with the trade-off
+  named honestly, including what we give up.
+- **An operational claim that had never actually been exercised.** [07-operations.md](07-operations.md)'s
+  game day tested exactly one of the risks in [10-risks.md](10-risks.md) (a provider outage) and
+  called the rest "designed for" — later fixed to rotate through four drills covering
+  connectivity loss, duplicate-event delivery, and sensor cross-confirmation as well.
+
+None of this changed the architecture's shape. All of it changed whether the document's claims
+about the architecture would survive being checked against each other — which, for a submission
+judged by people who ask exactly those kinds of cross-checking questions, is the part that
+actually gets tested in the room.
+
 ## What stayed human
 
 The three-lever framing itself, the decision to treat this as "deliberately small architecture"
