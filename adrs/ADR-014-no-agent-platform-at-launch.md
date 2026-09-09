@@ -13,8 +13,9 @@ thesis ([ADR-001](ADR-001-modular-monolith.md)) most directly collides with what
 in production AI-agent platforms will expect to see: a reusable agent layer, a typed tool
 registry shared across capabilities, and a two-tier (long-term + working) memory architecture.
 
-Today, C4's actual need is narrower: answer a visitor's question, optionally call one live data
-tool (queue times, cashless balance), and cite a source
+Today, C4's actual need is narrower: answer a visitor's question, optionally call one of two live
+data tools (queue times/cashless balance, or an opt-in loyalty-record lookup for return-visit
+personalization — [ADR-007](ADR-007-anonymous-visitor-analytics.md)), and cite a source
 ([C4-guest-companion.md](../04-ai-capabilities/C4-guest-companion.md)). No capability in
 [04-ai-capabilities/](../04-ai-capabilities/README.md) currently needs a chain of more than one
 tool call, and none needs state carried across a session.
@@ -24,8 +25,10 @@ tool call, and none needs state carried across a session.
 C4 ships as a grounded LLM with typed tool access, requested through the same capability
 contract every other AI call uses ([ADR-004](ADR-004-ai-gateway-provider-indirection.md)) — not
 as a standalone agent runtime with its own registry, orchestrator, or shared memory store. Tool
-access is scoped per-request (retrieval lookup, live queue/balance read), least-privilege, and
-stateless between turns beyond the conversation itself.
+access is scoped per-request (retrieval lookup, live queue/balance read, opt-in loyalty-record
+read), least-privilege, and stateless between turns beyond the conversation itself — the
+loyalty-record tool specifically re-checks opt-in status on every call rather than caching it for
+the session, so an opt-out takes effect on the next turn, not the next deployment.
 
 We are explicitly not building: a cross-capability tool registry, a long-term/working memory
 tier shared across capabilities, multi-step autonomous task planning, or an agent-population

@@ -30,6 +30,12 @@ during peak attendance, without taking on CQRS/ES's operational overhead (projec
 tooling, schema evolution) for a read-scaling problem this size doesn't actually have yet. Revisit
 if replica lag or write contention shows up as a real production signal, not pre-emptively.
 
+This replica is the one stated exception to [ADR-001](adrs/ADR-001-modular-monolith.md)'s
+schema-per-module rule: it reads across module schemas because it is a read-only reporting
+consumer, not a module, and nothing downstream of it writes back or makes a transactional
+decision off its results. It stays that — a dashboard and a training-data source, not a second
+way for one module's code to read another module's tables.
+
 ## Cloud run-rate
 
 | Item | Monthly (illustrative) |

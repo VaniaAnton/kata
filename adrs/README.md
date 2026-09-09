@@ -18,6 +18,7 @@
 | [014](ADR-014-no-agent-platform-at-launch.md) | No multi-step agent platform at launch | Criteria 1 (innovative AI, scoped) + 2 (suitability); Lever: cost-to-serve | accepted |
 | [015](ADR-015-internal-outbox-idempotent-consumers.md) | Transactional outbox + idempotent consumers | Criterion 5 (AI/architecture alignment); extends ADR-001 | accepted |
 | [016](ADR-016-edge-model-lifecycle-and-sensor-calibration.md) | Edge model lifecycle, golden-set methodology, sensor calibration | Criterion 6 (validation & verification); extends ADR-004, ADR-010 | accepted |
+| [017](ADR-017-no-lakehouse-feature-store-at-launch.md) | No lakehouse / feature store at launch | Criteria 4 (uncertainty) + 5 (alignment); extends ADR-001, ADR-004, ADR-016 | accepted |
 
 ## Traceability
 

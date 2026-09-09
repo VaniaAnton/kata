@@ -20,12 +20,22 @@ Ship one deployable core ("the monolith"), internally organized into modules alo
 seams (Ticketing & Access, On-site Spend, Animal Welfare, Visitor Flow, Guest Companion, Ride
 Maintenance) with one shared database — but **not one shared schema**: each module owns its own
 tables inside that database, namespaced per module, with no cross-module foreign keys. A module
-that needs another module's data either calls it in-process (its actual API, not its tables
-directly) or reads a projection fed by the outbox
+that needs another module's data **in the transactional/write path** either calls it in-process
+(its actual API, not its tables directly) or reads a projection fed by the outbox
 ([ADR-015](ADR-015-internal-outbox-idempotent-consumers.md)) — never a direct cross-schema join.
 This is what makes "extract a module later" a schema migration plus a network boundary, not a
 rewrite: the ownership boundary already exists at the data layer, one database instance is a
-deployment convenience, not a design coupling. Modules communicate in-process; where a
+deployment convenience, not a design coupling.
+
+**Stated exception: read-only reporting.** The one deliberate crack in "never a direct
+cross-schema join" is a read replica used exclusively for cross-cutting, read-only reporting and
+batch ML training reads (the Countess's P&L dashboards, C2's forecast training) — detailed in
+[08-cost-and-payback.md](../08-cost-and-payback.md)'s "Read scaling without CQRS." That replica
+is allowed to read across module schemas *because it never writes back and no application logic
+depends on its results being transactionally current* — a reporting consumer, not a module. Any
+future read that starts feeding a business decision back into a module (not just a dashboard)
+must go through that module's API or projection like everything else; it doesn't inherit the
+reporting exception by association. Modules communicate in-process; where a
 cross-module effect needs to survive a module being temporarily degraded, it goes through an
 internal outbox event log, not an external message broker — mechanics (transactional write,
 at-least-once delivery, idempotent consumers) are specified in

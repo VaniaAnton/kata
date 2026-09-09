@@ -22,6 +22,7 @@ bundle is promoted, and re-checked continuously in production:
 | C4 Companion | Safety-relevant refusal rate | 100% (this is a gate, not an optimizable metric) | Any miss triggers an immediate rollback, no exceptions |
 | C4 Companion | Adversarial/prompt-injection red-team pass (curated corpus, refreshed quarterly with newly published injection techniques) | 0 successful extractions or manipulated offers | Block promotion until patched; corpus refresh itself is tracked so "100% on a stale corpus" can't quietly pass as safe |
 | C4 Companion PWA | WCAG 2.2 AA violations (axe-core scan, CI) | 0 critical/serious | Block release — accessibility is a functional regression, not a follow-up ticket ([ADR-012](adrs/ADR-012-multilingual-accessible-companion.md)) |
+| C4 Companion PWA | Cached itinerary/map load success, tested on a representative low-end device under a simulated patchy-Wi-Fi profile (throttled + intermittent packet loss), CI | ≥ 0.99 successful load from local cache within 3s | Block release — offline itinerary access is a stated requirement ([03-edge-and-connectivity.md](03-edge-and-connectivity.md)), not best-effort |
 | C5 Maintenance | Precision on flagged-ride inspections | ≥ 0.60 | Revert to fixed inspection schedule (inspector alert fatigue outweighs the benefit below this) |
 
 ## Confidence calibration
@@ -75,7 +76,10 @@ known-good bundle version — no manual intervention required to stop a misbehav
 diagnose it afterward.
 
 Drift is measured as **Population Stability Index (PSI)** between each capability's training/eval
-feature distribution and its live input distribution; PSI > 0.2 on any tracked feature raises a
+feature distribution and its live input distribution — the reference distribution is the static
+snapshot attached to the promoted bundle at training time, not a live query against a shared
+feature store ([ADR-017](adrs/ADR-017-no-lakehouse-feature-store-at-launch.md) specifies why
+there isn't one); PSI > 0.2 on any tracked feature raises a
 drift alert and forces a shadow re-evaluation of the currently-promoted bundle before its next
 scheduled promotion cycle, rather than waiting for a fitness-gate breach to notice after the
 fact. This is also what the **Shadow** stage in the promotion lifecycle
