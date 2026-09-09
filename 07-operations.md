@@ -55,4 +55,4 @@ Sized for the team that actually exists here (3-5 engineers), not a platform org
 |---|---|---|---|
 | Edge (estate) | N/A — designed to run standalone | 0 (local store-and-forward buffers 72h) | See [03-edge-and-connectivity.md](03-edge-and-connectivity.md) |
 | Cloud monolith | 4h | 15 min (standard DB backup cadence) | Single region at this scale; multi-region is a Phase 3+ conversation if attendance growth justifies it |
-| AI Gateway | 1h (fails over to deterministic fallback immediately, full recovery target 1h) | N/A (stateless besides registry, which is backed up with the DB) | |
+| AI Gateway | 1h (fails over to deterministic fallback immediately, full recovery target 1h) | N/A (stateless besides registry, which shares the primary DB — see [ADR-004](adrs/ADR-004-ai-gateway-provider-indirection.md)'s in-process cache for what survives a DB outage specifically) | |

@@ -29,6 +29,28 @@ This directly answers "what happens if the best model today isn't the best tomor
 happens if our provider shuts down or changes prices": neither event touches calling code, both
 are config/registry changes gated by the same eval suite every other model change goes through.
 
+## Promotion lifecycle, spelled out
+
+The `Candidate → Shadow → Production → Retired` stages in the diagram below aren't just names:
+
+- **Candidate**: passes the offline eval suite ([06-verification.md](06-verification.md)) and
+  the calibration check — not scored against live traffic yet.
+- **Shadow**: scores against live production traffic for a minimum of **3 days or 1,000 scored
+  inferences, whichever is longer**, without its output ever reaching a visitor, keeper, or
+  inspector. A Shadow bundle that would have breached its fitness threshold on real traffic never
+  reaches Production.
+- **Production**: live, monitored per [06-verification.md](06-verification.md)'s drift and
+  fitness gates.
+- **Retired**: kept, not deleted, for the rollback target every automatic rollback in
+  [06-verification.md](06-verification.md) reverts *to* — a bundle is only purged after its
+  successor has spent one full season in Production without a rollback event.
+
+Every bundle carries a **model card**: capability, base model/version, eval-suite results at
+promotion time, stated known limitations (e.g. C1's RGB behavior-scoring bundle: "not validated
+for low-light nocturnal enclosures — flagged out-of-range rather than silently scored outside its
+validated illumination band"), and the specific Retired bundle it would roll back to. This is
+what a capability owner reads before approving a promotion — not the raw eval numbers alone.
+
 ## Diagram — AI capability pipeline
 
 ```mermaid

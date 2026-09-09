@@ -41,11 +41,17 @@ Deliberately **not** driving characteristics: independent team scalability (one 
 whole monolith), polyglot flexibility (one stack, chosen for team familiarity), infinite
 horizontal scale (15,000 visitors/day is a real number, not a hyperscale problem).
 
-## Architecture style — ATAM-style worksheet
+## Architecture style — trade-off worksheet (ATAM-informed)
 
-We scored five candidate styles against the four driving characteristics above, plus two
-general quality attributes every candidate has to clear regardless of theme. Scale: ✅ strong fit
-· 🟡 partial / achievable with extra work · ❌ poor fit, fights the characteristic.
+Calling the table below "ATAM" outright would overclaim: a full ATAM run produces a prioritized
+utility tree from stakeholder workshops and walks concrete quality-attribute scenarios against
+each candidate. What we did is lighter — the same driving characteristics from above, prioritized
+by the two decision-makers who actually own the trade-off here (the funding-gate owner from
+[ADR-005](adrs/ADR-005-ai-funding-gate.md), who owns cost accountability, and the ops lead from
+[07-operations.md](07-operations.md), who owns small-team operability) — scored across five
+candidate styles, plus two general quality attributes every candidate has to clear regardless of
+theme. Scale: ✅ strong fit · 🟡 partial / achievable with extra work · ❌ poor fit, fights the
+characteristic.
 
 | Style | Connectivity resilience | Small-team operability | AI-layer evolvability | Cost accountability | Time-to-first-capability | Testability |
 |---|---|---|---|---|---|---|
@@ -61,6 +67,22 @@ resilience. It wins on the two characteristics we actually weighted highest for 
 *this* scale — small-team operability and cost accountability — while staying acceptable
 everywhere else. That is the ATAM point: the "best" style is the one that wins the
 characteristics you prioritized, not the one that wins the most cells.
+
+**Sample quality-attribute scenario** (ATAM stimulus/environment/response/response-measure
+format, walked against the chosen style — one worked example rather than a full scenario suite):
+
+| Field | Value |
+|---|---|
+| Stimulus | The AI Gateway's primary model provider has an outage |
+| Source | External dependency (third-party AI provider) |
+| Environment | Production, peak season, ~15,000 visitors/day |
+| Artifact | AI Gateway (extracted component) + affected domain modules |
+| Response | Router fails over to the named, shadow-tested secondary provider; if both tiers are unavailable, the capability falls back to its deterministic path — no code change, no manual intervention |
+| Response measure | Time-to-fallback within the capability's stated latency budget ([ADR-011](adrs/ADR-011-latency-budget-visitor-ai.md)); zero manual intervention; on-call is not paged, since a degraded-to-fallback AI capability is next-business-day by design ([07-operations.md](07-operations.md)) |
+
+This is the scenario the modular-monolith-plus-extraction choice was actually walked against
+before being scored ✅ on connectivity resilience above — the worksheet cell is the conclusion,
+this is the reasoning behind it.
 
 ## Diagram — System context
 

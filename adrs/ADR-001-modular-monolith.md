@@ -18,10 +18,18 @@ organization to do it.
 
 Ship one deployable core ("the monolith"), internally organized into modules along business-domain
 seams (Ticketing & Access, On-site Spend, Animal Welfare, Visitor Flow, Guest Companion, Ride
-Maintenance) with one shared database. Modules communicate in-process; where a cross-module
-effect needs to survive a module being temporarily degraded, it goes through an internal outbox
-event log, not an external message broker — mechanics (transactional write, at-least-once
-delivery, idempotent consumers) are specified in [ADR-015](ADR-015-internal-outbox-idempotent-consumers.md).
+Maintenance) with one shared database — but **not one shared schema**: each module owns its own
+tables inside that database, namespaced per module, with no cross-module foreign keys. A module
+that needs another module's data either calls it in-process (its actual API, not its tables
+directly) or reads a projection fed by the outbox
+([ADR-015](ADR-015-internal-outbox-idempotent-consumers.md)) — never a direct cross-schema join.
+This is what makes "extract a module later" a schema migration plus a network boundary, not a
+rewrite: the ownership boundary already exists at the data layer, one database instance is a
+deployment convenience, not a design coupling. Modules communicate in-process; where a
+cross-module effect needs to survive a module being temporarily degraded, it goes through an
+internal outbox event log, not an external message broker — mechanics (transactional write,
+at-least-once delivery, idempotent consumers) are specified in
+[ADR-015](ADR-015-internal-outbox-idempotent-consumers.md).
 
 Extract a component out of the monolith only when it has a genuinely different non-functional
 profile the monolith can't satisfy. At launch, exactly two things qualify: the **AI Gateway**
@@ -43,6 +51,10 @@ survive the estate's connectivity outages independently of the core app's uptime
 - Independent scaling of, say, C1 welfare processing vs. C3 spend processing isn't possible
   without a later extraction — acceptable, since neither is anywhere near a scale where that
   matters at 15,000 visitors/day.
+- The AI Gateway and Telemetry Ingest are extracted for independent deploy cadence and scaling
+  profile, **not** independent failure domain — both still depend on the same primary DB
+  instance today; see [ADR-004](ADR-004-ai-gateway-provider-indirection.md) for the specific
+  mitigation and the honest limit of that mitigation.
 - If the estate's growth trajectory continues well past the 3-year, 15,000/day horizon, this
   decision should be revisited — see "How we will know this was right."
 

@@ -19,6 +19,17 @@ euro is committed (see the assumptions table in
 | Gate readers (offline-capable) | 8 | €600 | €4,800 |
 | **Total hardware (one-time)** | | | **~€51,000** |
 
+## Read scaling without CQRS
+
+Rejecting CQRS/ES ([02-architecture.md](02-architecture.md)'s worksheet) doesn't mean every read
+hits the same write path. The Countess's P&L dashboards, C2's batch forecast training reads, and
+operational reporting all read from a **standard read replica** of the primary DB — ordinary
+database replication, eventually consistent by seconds, not an event-sourced projection. This is
+enough separation to stop analytics/ML batch reads from contending with real-time cashless writes
+during peak attendance, without taking on CQRS/ES's operational overhead (projections, replay
+tooling, schema evolution) for a read-scaling problem this size doesn't actually have yet. Revisit
+if replica lag or write contention shows up as a real production signal, not pre-emptively.
+
 ## Cloud run-rate
 
 | Item | Monthly (illustrative) |

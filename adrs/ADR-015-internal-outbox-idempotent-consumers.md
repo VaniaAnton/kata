@@ -29,6 +29,14 @@ applied one layer up. Ordering is guaranteed only per-aggregate; no consumer her
 across independent aggregates (a C1 welfare event never needs to interleave, in strict order,
 with a C3 spend event).
 
+The relay persists its own read cursor (last-processed outbox row id) **transactionally**,
+committed alongside marking the row dispatched — so a relay crash mid-poll resumes from the last
+committed cursor on restart rather than re-scanning from the beginning or losing its place; any
+row it happens to redeliver on resume is exactly the at-least-once case idempotent consumers
+already handle, not a new failure mode. Published rows are retained for 30 days (covering audit
+and incident-debugging needs) then purged by a scheduled job — the table is not allowed to grow
+unbounded at 15,000 visitors/day of event volume.
+
 ## Alternatives considered
 
 | Option | Why not |

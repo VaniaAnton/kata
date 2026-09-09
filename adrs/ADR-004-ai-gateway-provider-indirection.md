@@ -37,6 +37,22 @@ secondary provider to a deterministic fallback if both model tiers are unavailab
 - The gateway itself becomes a single point of failure for all AI capabilities — mitigated by
   every capability having a deterministic fallback that doesn't depend on the gateway being up
   at all for its baseline behavior.
+- **Honest caveat on independence:** the gateway's registry currently persists in the same
+  primary database as the rest of the monolith ([ADR-001](ADR-001-modular-monolith.md)) — it is
+  extracted for an independent *deployment cadence and scaling profile*, not an independent
+  *failure domain*. A primary-DB outage would otherwise take down gateway resolution alongside
+  the core app. This is mitigated, not solved: the gateway caches its last-successfully-loaded
+  registry snapshot in-process, so a DB outage blocks new bundle promotions but not resolution of
+  already-cached capability→bundle mappings — request-serving degrades gracefully to "frozen at
+  last-known bundle," it doesn't fail outright. Full physical separation (a dedicated registry
+  store) was considered and rejected below as disproportionate to the risk at this scale.
+
+## Alternatives considered — registry storage
+
+| Option | Why not |
+|---|---|
+| Dedicated database for the gateway's registry, fully independent of the monolith's primary DB | Buys true failure-domain independence, but adds a second database to operate, back up, and keep consistent for a registry that changes on the order of "per bundle promotion," not per-request — disproportionate operational cost for this scale |
+| **Shared primary DB + in-process registry cache in the gateway** | — chosen: accepts the shared dependency honestly, and the cache means the specific failure mode (DB outage) degrades rather than cascades |
 
 ## How we will know this was right
 

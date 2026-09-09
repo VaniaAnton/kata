@@ -20,7 +20,18 @@ language, and accessibility as architectural requirements**, not follow-on polis
   eval set is run per-language, not just in English. This is a gap in both competing submissions
   — a language-based visitor product with no i18n/a11y treatment at all.
 - **Offline-tolerant**: the day's itinerary and a map are cached to the visitor's device on
-  generation, so patchy Wi-Fi mid-park doesn't strand someone who already got their plan.
+  generation, so patchy Wi-Fi mid-park doesn't strand someone who already got their plan. This
+  caching, and the companion's UI generally, is tested on a representative low-end device under a
+  simulated patchy-Wi-Fi network profile — not just budgeted for on paper in
+  [ADR-011](../adrs/ADR-011-latency-budget-visitor-ai.md)'s hop table — as part of the same CI
+  gate as the rest of C4's fitness functions ([06-verification.md](../06-verification.md)).
+- **Stateless by design, personalized through data it's actually given**: the companion carries
+  no memory of its own across turns beyond the current conversation or across visits
+  ([ADR-014](../adrs/ADR-014-no-agent-platform-at-launch.md)). Return-visit personalization comes
+  from looking up the visitor's **opt-in loyalty record** ([ADR-007](../adrs/ADR-007-anonymous-visitor-analytics.md))
+  at conversation start, not from the companion recalling anything itself — the "return-visit
+  uplift" this capability is funded against ([08-cost-and-payback.md](../08-cost-and-payback.md))
+  is a data-lookup effect, not a memory-architecture one.
 
 ## Accessibility as a functional requirement, not polish
 
