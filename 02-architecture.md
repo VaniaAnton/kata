@@ -41,6 +41,27 @@ Deliberately **not** driving characteristics: independent team scalability (one 
 whole monolith), polyglot flexibility (one stack, chosen for team familiarity), infinite
 horizontal scale (15,000 visitors/day is a real number, not a hyperscale problem).
 
+## Architecture style — ATAM-style worksheet
+
+We scored five candidate styles against the four driving characteristics above, plus two
+general quality attributes every candidate has to clear regardless of theme. Scale: ✅ strong fit
+· 🟡 partial / achievable with extra work · ❌ poor fit, fights the characteristic.
+
+| Style | Connectivity resilience | Small-team operability | AI-layer evolvability | Cost accountability | Time-to-first-capability | Testability |
+|---|---|---|---|---|---|---|
+| **Modular monolith + selective extraction** (chosen) | ✅ edge tier is independent of this choice either way; in-process core has no partial-failure mode of its own | ✅ one deploy, one on-call, one schema — see [ADR-001](adrs/ADR-001-modular-monolith.md) | ✅ AI Gateway extracted specifically to isolate this churn ([ADR-004](adrs/ADR-004-ai-gateway-provider-indirection.md)) | ✅ one place to see total spend once AI Gateway is extracted | ✅ no cross-service scaffolding before feature work starts | ✅ in-process calls, ordinary integration tests |
+| Microservices / architectural quanta per business domain | 🟡 resilience becomes 11-13 separate concerns instead of one edge-tier concern | ❌ 11-13 deploy pipelines and on-call surfaces for a 3-5 person team | 🟡 AI churn is isolated by default, but so is every other kind of churn — no differentiated benefit for AI specifically | 🟡 spend visibility requires cross-service cost aggregation tooling that doesn't exist yet | ❌ service scaffolding, contracts, and CI per quantum before feature work | 🟡 requires contract/integration test infrastructure across service boundaries |
+| Event-driven microservices with CQRS/ES throughout | 🟡 same 11-13-surface cost as above, plus eventual-consistency reasoning on every read | ❌ adds event-sourcing operational literacy on top of the microservices cost above | ✅ AI capabilities read from projections cleanly | ❌ hardest of the five to attribute AI cost per capability without dedicated tooling | ❌ highest of the five — projections, replay tooling, schema evolution before first feature | 🟡 event-sourced testing is powerful but has real ramp-up cost |
+| Serverless / FaaS per AI capability | ✅ naturally degrades per-function | 🟡 no servers to patch, but five separate deployment/observability configs to maintain | ✅ each capability's runtime is trivially swappable | 🟡 pay-per-invocation is legible, but cold-start cost is a new variable to budget for | 🟡 fast to first function, slower once five need to share the domain data model coherently | 🟡 good unit-level testability, weaker for cross-capability integration |
+| Single undifferentiated monolith, no internal module boundaries | ✅ same edge-tier independence as our choice | 🟡 cheapest to start, but ownership blurs as the team and codebase grow | ❌ AI churn has no seam to contain it — a provider change risks touching unrelated code paths | ❌ no natural boundary to attribute AI spend against | ✅ fastest of all five to a first feature | 🟡 fine early, degrades as the codebase grows without seams |
+
+**Reading the worksheet:** the modular monolith doesn't win every cell — event-driven CQRS/ES
+scores as well or better on pure AI-layer evolvability, and serverless matches it on connectivity
+resilience. It wins on the two characteristics we actually weighted highest for *this* team at
+*this* scale — small-team operability and cost accountability — while staying acceptable
+everywhere else. That is the ATAM point: the "best" style is the one that wins the
+characteristics you prioritized, not the one that wins the most cells.
+
 ## Diagram — System context
 
 ```mermaid

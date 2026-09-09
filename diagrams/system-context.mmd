@@ -1,0 +1,17 @@
+flowchart LR
+  Visitor((Visitor))
+  Keeper((Keeper / Vet))
+  Ops((Ops Manager))
+  Countess((Countess / Leadership))
+  subgraph VDE[Von Digitalis Estates Platform]
+    Core[Core Monolith]
+  end
+  PSP[[Payment Provider]]
+  AIProviders[[AI Model Providers]]
+
+  Visitor -->|buys tickets, chats, orders F&B| Core
+  Keeper -->|reviews welfare alerts 👤| Core
+  Ops -->|schedules, dashboards| Core
+  Countess -->|P&L reports| Core
+  Core -->|charges cashless balance| PSP
+  Core -->|capability calls 🤖| AIProviders

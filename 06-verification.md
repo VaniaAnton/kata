@@ -12,10 +12,15 @@ bundle is promoted, and re-checked continuously in production:
 |---|---|---|---|
 | C1 Welfare | Recall on held-out welfare incidents | ≥ 0.90 | Block promotion; keep prior bundle |
 | C1 Piranha count | Estimate vs. monthly manual audit | within stated CI 90% of the time | Widen reported CI; flag for camera recalibration |
+| C1 Welfare | Weekly false-negative audit (live production sample, not held-out) | consistent with held-out recall (≤10% false-negative) | Recalibrate confidence-band thresholds ([ADR-006](adrs/ADR-006-confidence-bands-cost-of-error.md)) — this is R4's mitigation made measurable, not a rollback trigger by itself |
+| C1 Individual attribution | % of feed/health events attributed to a single tagged individual (vs. ambiguous/enclosure-level fallback) in shared enclosures | ≥ 0.95 | Fall back to enclosure-level aggregate reporting for that enclosure; flag for re-tagging or sensor check (this is R5's mitigation made measurable) |
 | C2 Forecast | MAPE vs. naive baseline | must beat naive baseline | Revert to naive baseline (see [04-ai-capabilities/README.md](04-ai-capabilities/README.md)) |
+| C2 Pricing guidance | Realized revenue, corridor-auto-applied adjustments vs. static pricing (rolling month) | must not underperform static pricing | Disable auto-apply; require sign-off on every adjustment until root-caused |
+| C2 Pricing guidance | Corridor-bound violations (adjustment outside Countess-set min/max/max-Δ) | 0 — this is a hard invariant, not a probabilistic threshold | Any violation is a bug, not a model-quality issue: page immediately, freeze auto-apply |
 | C3 Offers | Pre-order conversion vs. queue-based baseline | must beat baseline within one season | Disable contextual offers, keep static menu |
 | C4 Companion | Groundedness (claims cite a source) | ≥ 0.95 | Guardrail blocks ungrounded response, logs as KB gap |
 | C4 Companion | Safety-relevant refusal rate | 100% (this is a gate, not an optimizable metric) | Any miss triggers an immediate rollback, no exceptions |
+| C4 Companion PWA | WCAG 2.2 AA violations (axe-core scan, CI) | 0 critical/serious | Block release — accessibility is a functional regression, not a follow-up ticket ([ADR-012](adrs/ADR-012-multilingual-accessible-companion.md)) |
 | C5 Maintenance | Precision on flagged-ride inspections | ≥ 0.60 | Revert to fixed inspection schedule (inspector alert fatigue outweighs the benefit below this) |
 
 ## Latency budget for visitor-facing AI
@@ -41,6 +46,16 @@ predictions on a rolling basis to compute real-world precision/recall, not just 
 numbers. A drift signal or a fitness-function breach triggers automatic rollback to the last
 known-good bundle version — no manual intervention required to stop a misbehaving model, only to
 diagnose it afterward.
+
+Drift is measured as **Population Stability Index (PSI)** between each capability's training/eval
+feature distribution and its live input distribution; PSI > 0.2 on any tracked feature raises a
+drift alert and forces a shadow re-evaluation of the currently-promoted bundle before its next
+scheduled promotion cycle, rather than waiting for a fitness-gate breach to notice after the
+fact. This is also what the **Shadow** stage in the promotion lifecycle
+([05-ai-platform.md](05-ai-platform.md)) is for on the way *in*: every new bundle scores against
+live traffic without acting on it for a burn-in period before Production promotion, so a bundle
+that would have failed the fitness gate never reaches a real visitor, keeper, or inspector in the
+first place.
 
 ## Diagram — Verification loop
 

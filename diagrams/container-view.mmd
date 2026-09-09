@@ -1,0 +1,29 @@
+flowchart TB
+  subgraph Edge[Estate — Edge Tier]
+    Broker[(Local MQTT Broker<br/>store-and-forward)]
+    EdgeCV["Edge CV Inference 🤖<br/>animal cams, ride sensors"]
+    GateDevice[Gate Reader<br/>offline ticket validation]
+  end
+
+  subgraph Cloud[Cloud — Modular Monolith]
+    Ticketing[Ticketing & Access]
+    Spend[On-site Spend]
+    Welfare[Animal Welfare]
+    Flow[Visitor Flow & Staffing]
+    Companion[Guest Companion]
+    Maintenance[Ride Maintenance]
+  end
+
+  subgraph Extracted[Extracted Services]
+    Gateway[AI Gateway 🤖]
+    Ingest[Telemetry Ingest]
+  end
+
+  DB[(Primary DB)]
+
+  EdgeCV -->|features, not raw video| Ingest
+  Broker -->|batched events| Ingest
+  Ingest --> Cloud
+  Cloud --> DB
+  Cloud -->|capability calls| Gateway
+  GateDevice -.->|offline signed ticket| Broker

@@ -63,6 +63,7 @@ and upsells in context (spend driver).
 | [10-risks.md](10-risks.md) | Risks + owners, including AI-native ones |
 | [11-how-we-used-ai.md](11-how-we-used-ai.md) | The AI-assisted process behind this submission itself |
 | [adrs/](adrs/README.md) | Architecture Decision Records |
+| [diagrams/](diagrams/README.md) | Diagram sources (`.mmd`) and rendered exports (`.svg`) for every diagram above |
 
 ## Diagram legend
 

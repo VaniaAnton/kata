@@ -63,6 +63,7 @@ sensitivity note here.
 - **No agentic multi-step AI orchestration layer at launch.** A grounded LLM with tool access
   (C4) covers the guest-facing need; an orchestration platform is infrastructure for a scale of
   agent population we don't have yet. Revisit if C4 usage data shows demand for more autonomous
-  multi-step tasks (kill/build criterion lives in ADR-005).
+  multi-step tasks — full trade-off, including what we give up, in
+  [ADR-014](adrs/ADR-014-no-agent-platform-at-launch.md).
 - **No dynamic per-person pricing.** Family-bundle pricing (part of C2) stays cohort-level and
   policy-bounded — per-person pricing is a fairness and PR risk with no lever justification.

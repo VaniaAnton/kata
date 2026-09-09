@@ -15,6 +15,8 @@
 | [011](ADR-011-latency-budget-visitor-ai.md) | Latency budget for visitor-facing AI | Capability: C4 | accepted |
 | [012](ADR-012-multilingual-accessible-companion.md) | Multilingual & accessible companion | Capability: C4 | accepted |
 | [013](ADR-013-advisory-predictive-maintenance.md) | Advisory predictive maintenance on heritage rides | Capability: C5 | accepted |
+| [014](ADR-014-no-agent-platform-at-launch.md) | No multi-step agent platform at launch | Criteria 1 (innovative AI, scoped) + 2 (suitability); Lever: cost-to-serve | accepted |
+| [015](ADR-015-internal-outbox-idempotent-consumers.md) | Transactional outbox + idempotent consumers | Criterion 5 (AI/architecture alignment); extends ADR-001 | accepted |
 
 ## Traceability
 

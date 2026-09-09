@@ -22,6 +22,17 @@ language, and accessibility as architectural requirements**, not follow-on polis
 - **Offline-tolerant**: the day's itinerary and a map are cached to the visitor's device on
   generation, so patchy Wi-Fi mid-park doesn't strand someone who already got their plan.
 
+## Accessibility as a functional requirement, not polish
+
+WCAG 2.2 AA is an acceptance criterion for the companion's interface, checked by an automated
+axe-core scan in CI with a **0 critical/serious violations** gate — the same fitness-function
+mechanism every other AI capability is held to (see the table in
+[06-verification.md](../06-verification.md)), not a manual audit that happens once before launch
+and drifts afterward. Concretely: full keyboard navigation (no chat action reachable only by
+mouse/touch), screen-reader-announced message updates (not silent DOM changes), and color
+contrast that holds under the confidence-band visual treatment used elsewhere in the guest UI.
+Full rationale in [ADR-012](../adrs/ADR-012-multilingual-accessible-companion.md).
+
 ## Guardrails / grounding
 
 Safety-relevant facts (ride restrictions, allergen info, opening hours) are never generated —

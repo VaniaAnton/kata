@@ -20,7 +20,8 @@ Ship one deployable core ("the monolith"), internally organized into modules alo
 seams (Ticketing & Access, On-site Spend, Animal Welfare, Visitor Flow, Guest Companion, Ride
 Maintenance) with one shared database. Modules communicate in-process; where a cross-module
 effect needs to survive a module being temporarily degraded, it goes through an internal outbox
-event log, not an external message broker.
+event log, not an external message broker — mechanics (transactional write, at-least-once
+delivery, idempotent consumers) are specified in [ADR-015](ADR-015-internal-outbox-idempotent-consumers.md).
 
 Extract a component out of the monolith only when it has a genuinely different non-functional
 profile the monolith can't satisfy. At launch, exactly two things qualify: the **AI Gateway**

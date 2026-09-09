@@ -1,0 +1,15 @@
+flowchart LR
+  Service[Domain Service] -->|request capability| Gateway[AI Gateway 🤖]
+  Gateway --> Router[Model Router]
+  Router --> Primary[Primary Model]
+  Router -.fallback.-> Secondary[Secondary Model]
+  Router -.fallback.-> Deterministic[Deterministic Fallback]
+  Registry[(Prompt / Model Registry)] --> Router
+  Gateway --> CostMonitor[Cost Monitor]
+  Gateway --> Trace[(Trace: capability, model_version, cost, confidence)]
+
+  subgraph Lifecycle[Promotion Lifecycle]
+    direction LR
+    Candidate --> Shadow --> Production --> Retired
+  end
+  Registry --- Lifecycle

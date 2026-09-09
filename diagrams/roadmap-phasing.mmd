@@ -1,0 +1,21 @@
+flowchart TB
+  subgraph Phase1["Phase 1 — Foundation (months 1-3)"]
+    P1a[Edge MQTT + store-and-forward]
+    P1b[Offline-capable ticketing & gate entry]
+    P1c[C2 rostering — naive baseline, no model yet]
+  end
+
+  subgraph Phase2["Phase 2 — Pay for itself (months 4-9)"]
+    P2a[AI Gateway]
+    P2b[C3 On-site spend]
+    P2c[C1 Animal welfare monitoring]
+    P2d[C2 forecast model goes live]
+  end
+
+  subgraph Phase3["Phase 3 — Scale (months 10-18)"]
+    P3a[C5 Ride maintenance]
+    P3b[C4 Guest companion]
+    P3c[Dynamic family-bundle pricing]
+  end
+
+  Phase1 --> Phase2 --> Phase3

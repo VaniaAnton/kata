@@ -1,0 +1,20 @@
+flowchart LR
+  subgraph Levers
+    L1[↑ Attendance]
+    L2[↑ Spend / guest]
+    L3[↓ Cost-to-serve]
+  end
+  subgraph Capabilities
+    C2["C2 Visitor Flow<br/>& Family Bundles"]
+    C4[C4 Guest Companion]
+    C3[C3 On-site Spend]
+    C1[C1 Animal Welfare]
+    C5[C5 Ride Maintenance]
+  end
+  L1 --> C2
+  L1 --> C4
+  L2 --> C3
+  L2 --> C4
+  L3 --> C1
+  L3 --> C5
+  L3 --> C2

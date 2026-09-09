@@ -1,0 +1,15 @@
+sequenceDiagram
+  participant Sensor as Enclosure Sensor
+  participant Broker as Local MQTT Broker
+  participant Cloud as Cloud Ingest
+
+  Sensor->>Broker: publish(reading, seq)
+  alt uplink available
+    Broker->>Cloud: forward(batch)
+    Cloud-->>Broker: ack(seq)
+    Broker->>Broker: purge acknowledged messages
+  else uplink down
+    Broker->>Broker: persist to disk (up to 72h)
+    Note over Broker: local consumers (siren, gate) still served directly
+  end
+  Note over Cloud: dedupe by (device_id, seq) on ingest — safe against retried batches

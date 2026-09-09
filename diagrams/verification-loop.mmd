@@ -1,0 +1,10 @@
+flowchart LR
+  Inference["AI Inference 🤖"] --> Event[(Inference Event)]
+  Event --> Monitor[Drift Monitor]
+  Event --> Review["Human Review Queue 👤"]
+  GroundTruth[Delayed Ground Truth] --> Join["Join: prediction vs. actual"]
+  Event --> Join
+  Join --> Metrics[Precision / Recall / MAPE]
+  Metrics --> Gate{Within fitness threshold?}
+  Gate -->|yes| Continue[Stays in production]
+  Gate -->|no| Rollback["Auto-rollback to prior version /<br/>deterministic fallback"]

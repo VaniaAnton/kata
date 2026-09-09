@@ -10,6 +10,9 @@ C2 needs footfall counts by area to forecast demand and staffing; C3 needs enoug
 make contextual offers relevant. Neither actually needs to know who a specific visitor is, and
 identity tracking (face recognition, MAC-address tracking, cross-visit re-identification) carries
 privacy risk and regulatory exposure disproportionate to the benefit for these two use cases.
+Concretely, this is GDPR **Art. 5(1)(c) data minimisation** — don't collect identity data a
+capability doesn't need — and **Art. 17 right to erasure** is far simpler to honor when the
+default data shape has no identity to erase in the first place.
 
 ## Decision
 
@@ -32,7 +35,8 @@ history-based offers.
   acceptable trade given C2 and C3 don't need per-visitor identity to hit their targets in
   [04-ai-capabilities/README.md](../04-ai-capabilities/README.md).
 - Opt-in loyalty data is the only place personal visitor data accumulates, simplifying the
-  privacy/compliance surface to one well-defined path instead of every analytics pipeline.
+  privacy/compliance surface to one well-defined path instead of every analytics pipeline —
+  one erasure path to build and test against Art. 17, not one per analytics feature.
 
 ## How we will know this was right
 
